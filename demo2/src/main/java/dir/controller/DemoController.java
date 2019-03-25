@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,30 +22,35 @@ public class DemoController {
 private DepartmentService departmentService;
 private ContactService contactService;
 	
-	public DemoController(DepartmentService thedepartmentService) {
-		departmentService=thedepartmentService;
+	public DemoController(DepartmentService departmentService, ContactService contactService) {
+		this.departmentService = departmentService;
+		this.contactService = contactService;
 	}
 	
-	@GetMapping("/departments_list")
+	@GetMapping("/departments")
 	public String listDepartments(Model theModel) {
 		
 		List<Department> theDepartments=departmentService.findAll();
 		
 		theModel.addAttribute("departments",theDepartments);
 		
-		return "/departments/list_departments";
+		return "/departments/list";
 		
 	}
 	
-	@GetMapping("/contact")
-	public String listContacts(@RequestParam("departmentId") int theId, Model theModel) {
-		
-			List<Contact> theContacts=contactService.findById(theId);
-		
-			theModel.addAttribute("contacts",theContacts);
-		
-			return "/departments/list_contacts";
+	
+	//@GetMapping("/departments/{id}")
+	@GetMapping("/contacts/{id}")
+	public String listContacts(@PathVariable("id") int theId, Model theModel) {
+	        Department theDepartments = departmentService.findById(theId);
+	        theModel.addAttribute("departments",theDepartments);
+	        return "/departments/show";
+	        
+	        
 	}
+	
+	
+	
 
 
 }
